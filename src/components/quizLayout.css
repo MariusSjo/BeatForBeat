@@ -29,7 +29,7 @@
 }
 
 .gameArea {
-  background-image: url("background.png");
+  background-image: url("../assets/pictures/background.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   height: 83vh;
@@ -51,7 +51,7 @@ p {
 }
 
 .competitors > div {
-  background-image: url("teamNagell.png");
+  background-image: url("../assets/pictures/teamNagell.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   width: 30vw;
@@ -59,7 +59,7 @@ p {
   position: relative;
 }
 .competitors > div:first-child {
-  background-image: url("teamGisle.png");
+  background-image: url("../assets/pictures/teamGisle.png");
 }
 
 .competitors > div > input[type="text"] {
