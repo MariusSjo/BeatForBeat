@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+# Deploy status: 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7d52045d-64d8-49f4-9202-425d4732d1d7/deploy-status)](https://app.netlify.com/sites/ornate-marigold-b1bf01/deploys)
 
-## Available Scripts
+The app is live [![here](https://beatforbeat.netlify.app/)] 
 
-In the project directory, you can run:
+# Beat for Beat - React Edition
+Welcome to the Beat for Beat React app! In this app, you can test your knowledge of popular songs and artists by trying to guess who sang each song.
 
-### `npm start`
+## How to Play
+1. Select a song from the list and listen to a clip.
+2. Try to guess who sang the song by choosing from the list of options.
+3. If you guess correctly, you will earn points.
+5. The game ends when you have guessed all the songs, and your final score will be displayed.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
+1. A variety of popular songs to guess from
+2. A list of options to choose from for each song
+3. A running tally of your points as you play
+4. A final score display at the end of the game
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+__We hope you have fun playing "Beat for Beat" in this React app!__
 
-### `npm test`
+Thank you for considering my beat for beat! I hope you enjoy testing your friends knowledge of different musical genres and artists.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I strive to provide a fun and engaging experience for all users. If you encounter any issues or have suggestions for improvement, please don't hesitate to contact me. I appreciate your feedback and will do my best to address any concerns.
 
-### `npm run build`
+I would also like to extend a special thanks to the talented musicians and artists whose music is featured in this app. Without their contributions, this app would not be possible.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Thank you for using my app, and i hope you have a great time!

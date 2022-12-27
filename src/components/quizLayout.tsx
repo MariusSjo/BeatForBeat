@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import './quizLayout.css';
-import Teamcomponent from './teamcomponent.tsx';
-import sound from './wrong.mp3';
+import Teamcomponent from './teamcomponent';
 
-function quizLayout() {
-	// eslint-disable-next-line react-hooks/rules-of-hooks
+
+function QuizLayout() {
 	const [words, setWords] = useState(['Han', 'lever', 'livet', 'i', 'baris'])
-	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const [counter, setCounter] = useState(0)
 	const teams = ['nagell', 'gisle']
-	const audio = new Audio(sound);
-
+	const audio = new Audio(require('./wrong.mp3'));
+	
 	function shuffle(array: Array<number>) {
 		let ci = array.length,
 			ri;
-		while (ci != 0) {
+		while (ci !== 0) {
 			ri = Math.floor(Math.random() * ci);
 			ci--;
 			[array[ci], array[ri]] = [array[ri], array[ci]];
@@ -27,8 +25,8 @@ function quizLayout() {
 		['Chiketita', 'tell', 'me', 'whats', 'wrong'], ['Some', 'say', 'love', 'it', 'is']
 	];
 
-	function handleClick(id: string) {
-		const box: HTMLElement | null = document.getElementById((id));
+	function handleClick(id: number) {
+		const box: HTMLElement | null = document.getElementById((id+''));
 		if (box !== null) {
 			if (currentcolors[id]) {
 				box.style.backgroundColor = 'red';
@@ -40,19 +38,17 @@ function quizLayout() {
 		}
 	}
 
-	function next() {
+	function next():void {
 		currentcolors = shuffle(currentcolors);
 		setWords(songs[counter]);
 		setCounter(counter + 1)
-		console.log(counter)
 	}
 
 
 
 	return <>
-
 		<div className="boxes">
-			{words.map((value, key) => (<p id={key + ''} key={value + ''} onClick={() => handleClick(key + '')}>{key + 1}</p>))}
+			{words.map((value, key) => (<p id={key + ''} key={value + ''} onClick={() => handleClick(key)}>{key + 1}</p>))}
 		</div>
 		<div className='gameArea'>
 			<button onClick={() => next()}> Neste sang </button>
@@ -60,12 +56,12 @@ function quizLayout() {
 				{teams.map((value, key) => (<input className={value} type='number' />))}
 			</div>
 			<div className='competitors'>
-				{teams.map((value, key) => (<Teamcomponent className={value} />))}
+				{teams.map((value, key) => (<Teamcomponent name={value} />))}
 			</div>
 		</div>
 	</>;
 }
 
-export default quizLayout;
+export default QuizLayout;
 
 

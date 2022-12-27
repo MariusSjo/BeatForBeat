@@ -1,10 +1,10 @@
 import React from 'react'
 
-type Props = {}
+type Props = { name: string}
 
-function teamcomponent({ }: Props) {
+function teamcomponent({ name }: Props) {
     return (
-        <div><input className='points' type="text" /></div>
+        <div className={name}><input className='points' type="text" /></div>
     )
 }
 
