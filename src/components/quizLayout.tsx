@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "./quizLayout.css";
 import Teamcomponent from "./teamcomponent";
+import sound from "./wrong.mp3";
 
 function QuizLayout() {
   const [words, setWords] = useState(["Han", "lever", "livet", "i", "baris"]);
   const [counter, setCounter] = useState(0);
   const teams = ["nagell", "gisle"];
-  const audio = new Audio(require("./wrong.mp3"));
+  const audio = new Audio(sound);
 
   function shuffle(array: Array<number>) {
     let ci = array.length,
@@ -57,12 +58,12 @@ function QuizLayout() {
         <button onClick={() => next()}> Neste sang </button>
         <div className="points">
           {teams.map((value, key) => (
-            <input className={value} type="number" />
+            <input className={value} type="number" key={key} />
           ))}
         </div>
         <div className="competitors">
           {teams.map((value, key) => (
-            <Teamcomponent name={value} />
+            <Teamcomponent name={value} key={key} />
           ))}
         </div>
       </div>
