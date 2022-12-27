@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Teamcomponent from "./Team";
 import "./quizLayout.css";
-import sound from "./wrong.mp3";
+import sound from "../assets/sound/wrong.mp3";
 
 function QuizLayout() {
   const [words, setWords] = useState(["Han", "lever", "livet", "i", "baris"]);
