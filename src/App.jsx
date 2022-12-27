@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import QuizLayout from "./components/quizLayout.tsx";
+import QuizLayout from "./components/QuizLayout";
 
 function App() {
   return (

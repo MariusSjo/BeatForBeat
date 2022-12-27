@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import Teamcomponent from "./Team";
 import "./quizLayout.css";
-import Teamcomponent from "./teamcomponent";
 import sound from "./wrong.mp3";
 
 function QuizLayout() {

@@ -2,7 +2,7 @@ import React from "react";
 
 type Props = { name: string };
 
-function teamcomponent({ name }: Props) {
+function Team({ name }: Props) {
   return (
     <div className={name}>
       <input className="points" type="text" />
@@ -10,4 +10,4 @@ function teamcomponent({ name }: Props) {
   );
 }
 
-export default teamcomponent;
+export default Team;
