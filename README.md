@@ -10,10 +10,10 @@ Welcome to the Beat for Beat React app! In this app, you can test your knowledge
 
 ## How to Play
 
-1. Select a song from the list and listen to a clip.
-2. Try to guess who sang the song by choosing from the list of options.
-3. If you guess correctly, you will earn points.
-4. The game ends when you have guessed all the songs, and your final score will be displayed.
+1. Gather up your friends and start this app on a pc.
+2. Now divide the two teams into team Gisle and team Nagell.
+3. Now the players take turn, revealing each box. if the box is red, then it goes to the other team, while if the box is blue, the team can start to sing a song, and thereby guess what song it actually is hidden there.
+4. The game ends when the teams have guessed all the songs, or a point limit is reached.
 
 ## Features
 
