@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
 
-type Props = { name: string}
+type Props = { name: string };
 
 function teamcomponent({ name }: Props) {
-    return (
-        <div className={name}><input className='points' type="text" /></div>
-    )
+  return (
+    <div className={name}>
+      <input className="points" type="text" />
+    </div>
+  );
 }
 
-export default teamcomponent
+export default teamcomponent;
