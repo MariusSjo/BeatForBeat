@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Teamcomponent from "./Team";
-import "./quizLayout.css";
+import "./QuizLayout.css";
 import sound from "../assets/sound/wrong.mp3";
 
 function QuizLayout() {
@@ -10,12 +10,12 @@ function QuizLayout() {
   const audio = new Audio(sound);
 
   function shuffle(array: Array<number>) {
-    let ci = array.length,
+    let length = array.length,
       ri;
-    while (ci !== 0) {
-      ri = Math.floor(Math.random() * ci);
-      ci--;
-      [array[ci], array[ri]] = [array[ri], array[ci]];
+    while (length !== 0) {
+      ri = Math.floor(Math.random() * length);
+      length--;
+      [array[length], array[ri]] = [array[ri], array[length]];
     }
     return array;
   }

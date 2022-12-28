@@ -1,0 +1,74 @@
+{
+  "songs": [
+    {
+      "title": "Wolves",
+      "artist": "Selena Gomez",
+      "recognition_sequence": "I've been running through the jungle"
+    },
+    {
+      "title": "Dynamite",
+      "artist": "BTS",
+      "recognition_sequence": "I'm in the stars tonight"
+    },
+    {
+      "title": "Watermelon Sugar",
+      "artist": "Harry Styles",
+      "recognition_sequence": "Tastes like strawberries, in the"
+    },
+    {
+      "title": "Sorry",
+      "artist": "Justin Bieber",
+      "recognition_sequence": "Is it too late now"
+    },
+    {
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "recognition_sequence": "The club isn't the best place"
+    },
+    {
+      "title": "Old Town Road",
+      "artist": "Lil Nas X",
+      "recognition_sequence": "I'm gonna take my horse"
+    },
+    {
+      "title": "Havana",
+      "artist": "Camila Cabello",
+      "recognition_sequence": "Havana, ooh na-na"
+    },
+    {
+      "title": "See You Again",
+      "artist": "Wiz Khalifa ft. Charlie Puth",
+      "recognition_sequence": "It's been a long day"
+    },
+    {
+      "title": "I Will Always Love You",
+      "artist": "Whitney Houston",
+      "recognition_sequence": "I will always love you"
+    },
+    {
+      "title": "Despacito",
+      "artist": "Luis Fonsi ft. Daddy Yankee",
+      "recognition_sequence": "Sí, sabes que ya llevo"
+    },
+    {
+      "title": "Uptown Funk",
+      "artist": "Mark Ronson ft. Bruno Mars",
+      "recognition_sequence": "Don't believe me, just watch"
+    },
+    {
+      "title": "All About That Bass",
+      "artist": "Meghan Trainor",
+      "recognition_sequence": "I'm bringing booty back"
+    },
+    {
+      "title": "Baby",
+      "artist": "Justin Bieber",
+      "recognition_sequence": "You know you love me, I know you care"
+    },
+    {
+      "title": "Counting Stars",
+      "artist": "OneRepublic",
+      "recognition_sequence": "Lately I've been, I've been losing sleep"
+    }
+  ]
+}
