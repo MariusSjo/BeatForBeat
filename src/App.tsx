@@ -4,12 +4,7 @@ import QuizLayout from "./components/QuizLayout";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { collection, getDocs } from "firebase/firestore";
-
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -21,24 +16,13 @@ firebase.initializeApp({
   measurementId: process.env.REACT_APP_MEASURMENT_ID,
 });
 
-const auth = firebase.auth();
 const firestore = firebase.firestore();
 
 function App() {
-  console.log(process.env.REACT_APP_API_KEY);
-  const [user] = useAuthState(auth as any);
-  /* getMessages() */
   const [gameStarted, setGameStarted] = useState(false);
   return (
     <div className="App">
-      {auth ? (
-        <div>
-          {" "}
-          <ChatRoom /> <SignOut />{" "}
-        </div>
-      ) : (
-        <SignIn />
-      )}
+      <ChatRoom />
       {gameStarted ? (
         <QuizLayout />
       ) : (
@@ -48,38 +32,64 @@ function App() {
   );
 }
 
-function SignIn() {
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
-    auth.signInWithRedirect(provider);
-  };
-
-  return <button onClick={signInWithGoogle}>Sign in with Google</button>;
-}
-
-function SignOut() {
-  return (
-    auth.currentUser && <button onClick={() => auth.signOut()}>Sign Out</button>
-  );
-}
-
 function ChatRoom() {
+  const [formValue, setFormValue] = useState([[""], [""], [""]]);
   const messagesRef = firestore.collection("messages");
   const query: any = messagesRef;
   const field: any = { idField: "id" };
-  const [values, loading] = useCollectionData<any>(query, {
-    idField: "id",
-  } as any);
-  console.log("what is this?", values, loading);
+  const [values, loading] = useCollectionData<any>(query);
 
+  const addSong = async (e: any) => {
+    e.preventDefault();
+    if (
+      formValue[2][0].split(" ").length < 5 ||
+      formValue[2][0].split(" ").length > 6
+    )
+      alert("Please write between 5 and 6 words");
+    else {
+      await messagesRef.add({
+        artist: formValue[0],
+        name: formValue[1],
+        lyrics: formValue[2],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      setFormValue([[""], [""], [""]]);
+    }
+  };
   return (
     <>
-      <div>
-        {loading && <h1>loading....</h1>}{" "}
-        {values &&
-          values.map((msg, index) => <ChatMessage key={index} message={msg} />)}
-      </div>
+      {loading && <h1>loading....</h1>}
+      {values &&
+        values.map((msg, index) => <ChatMessage key={index} message={msg} />)}
+      <form onSubmit={addSong}>
+        <label>Artist:</label>
+        <input
+          type="text"
+          value={formValue[0]}
+          onChange={(e) =>
+            setFormValue([[e.target.value], formValue[1], formValue[2]])
+          }
+        />
+        <label>Title:</label>
+        <input
+          required
+          type="text"
+          value={formValue[1]}
+          onChange={(e) =>
+            setFormValue([formValue[0], [e.target.value], formValue[2]])
+          }
+        />
+        <label>lyrics:</label>
+        <input
+          required
+          type="text"
+          value={formValue[2]}
+          onChange={(e) =>
+            setFormValue([formValue[0], formValue[1], [e.target.value]])
+          }
+        />
+        <button type="submit">Send</button>
+      </form>
     </>
   );
 }
