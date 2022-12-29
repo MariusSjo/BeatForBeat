@@ -2,9 +2,11 @@ import "./App.css";
 import React, { useState } from "react";
 import QuizLayout from "./components/QuizLayout";
 import firebase from "firebase/compat/app";
+import { Spin } from "antd";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import SongSelection from "./components/SongSelection";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -32,14 +34,23 @@ function App() {
   );
 }
 
+export interface song {
+  name: string;
+  artist: string;
+  lyrics: string;
+  key: string;
+}
+
 function ChatRoom() {
   const [formValue, setFormValue] = useState([[""], [""], [""]]);
   const messagesRef = firestore.collection("messages");
   const query: any = messagesRef;
-  const field: any = { idField: "id" };
-  const [values, loading] = useCollectionData<any>(query);
+  // @ts-ignore
+  const [fetchedSongs, loading] = useCollectionData<any>(query, {
+    idField: "id",
+  } as any);
 
-  const addSong = async (e: any) => {
+  const addSong = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
       formValue[2][0].split(" ").length < 5 ||
@@ -48,9 +59,9 @@ function ChatRoom() {
       alert("Please write between 5 and 6 words");
     else {
       await messagesRef.add({
-        artist: formValue[0],
-        name: formValue[1],
-        lyrics: formValue[2],
+        artist: formValue[0][0],
+        name: formValue[1][0],
+        lyrics: formValue[2][0],
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       setFormValue([[""], [""], [""]]);
@@ -58,15 +69,13 @@ function ChatRoom() {
   };
   return (
     <>
-      {loading && <h1>loading....</h1>}
-      {values &&
-        values.map((msg, index) => <ChatMessage key={index} message={msg} />)}
+      {loading && <Spin size="large" />}
       <form onSubmit={addSong}>
         <label>Artist:</label>
         <input
           type="text"
           value={formValue[0]}
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormValue([[e.target.value], formValue[1], formValue[2]])
           }
         />
@@ -90,13 +99,12 @@ function ChatRoom() {
         />
         <button type="submit">Send</button>
       </form>
+      <div>
+        <h1>Choose songs</h1>
+        {fetchedSongs && <SongSelection song={fetchedSongs} />}
+      </div>
     </>
   );
-}
-
-function ChatMessage(props: any) {
-  const { text } = props.message;
-  return <p key={text}>{text}</p>;
 }
 
 export default App;
