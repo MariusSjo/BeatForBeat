@@ -2,19 +2,23 @@
   background-color: black;
   flex-direction: row;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  width: 100%;
+}
+.boxes > div {
+  min-width: 16%;
+  min-height: 16vh;
+  flex-grow: 1;
 }
 .boxes p {
+  min-width: 10%;
   color: white;
-  font-size: 2.5em;
+  font-size: 1.5em;
   background-color: lightblue;
-  min-width: 15vw;
-  min-height: 10vh;
   text-align: center;
   padding-top: 5vh;
-  padding-left: 2vw;
-  padding-right: 2vw;
-  border-radius: 5px;
+  padding-bottom: 5vh;
+  border-radius: 3px;
   border-color: black;
   border-style: solid;
   border-width: 1vh;
