@@ -3,23 +3,24 @@ import Title from "antd/es/typography/Title";
 import React from "react";
 import "./ControlGame.css";
 
-function ControlGame(props: any, props2: any) {
-  const save = props.save;
+function ControlGame(props: any) {
+  const setValues = props.save.doc(localStorage.getItem("gameID"));
   const game = props.game[0];
+  const songlength = game.songs[game.songnumber].lyrics.split(" ").length;
+  const buttons = [];
+  for (let index = 0; index < songlength; index++) {
+    buttons.push(
+      <Button onClick={() => revealBox(index)} size="large" key={index}>
+        {" "}
+        {index + 1}{" "}
+      </Button>
+    );
+  }
 
   return (
     <div>
       <Title>Game controller</Title>
-      <div className="revealButtons">
-        {game.revealed &&
-          game.revealed.map((box: any, key: number) => {
-            return (
-              <Button danger={box} size="large" key={key}>
-                {key + 1}
-              </Button>
-            );
-          })}
-      </div>
+      <div className="revealButtons">{songlength && buttons}</div>
       <Title>Current song:</Title>
       <p> Artist: {game.songs[game.songnumber].artist} </p>
       <p> Title: {game.songs[game.songnumber].name} </p>
@@ -67,7 +68,7 @@ function ControlGame(props: any, props2: any) {
         </div>
       </div>
 
-      <Button type="primary" size="large">
+      <Button type="primary" size="large" onClick={() => nextSong()}>
         {" "}
         Next song{" "}
       </Button>
@@ -75,20 +76,30 @@ function ControlGame(props: any, props2: any) {
   );
 
   function updatePoints(increment: boolean, team: string): void {
-    const givepoints = save.doc(localStorage.getItem("gameID"));
     if (increment) {
       if (team === "team1") {
-        givepoints.update({ points1: game.points1 + 1 });
+        setValues.update({ points1: game.points1 + 1 });
       } else {
-        givepoints.update({ points2: game.points2 + 1 });
+        setValues.update({ points2: game.points2 + 1 });
       }
     } else {
       if (team === "team1") {
-        givepoints.update({ points1: game.points1 - 1 });
+        setValues.update({ points1: game.points1 - 1 });
       } else {
-        givepoints.update({ points2: game.points2 - 1 });
+        setValues.update({ points2: game.points2 - 1 });
       }
     }
+  }
+  function nextSong() {
+    setValues.update(
+      { songnumber: game.songnumber + 1 },
+      { revealClick: null }
+    );
+  }
+
+  function revealBox(index: number) {
+    setValues.update({ revealClick: index });
+    console.log(index);
   }
 }
 export default ControlGame;
