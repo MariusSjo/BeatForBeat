@@ -91,9 +91,17 @@ function ControlGame(props: any) {
     }
   }
   function nextSong() {
+    if (game.songs.length === game.songnumber) {
+      alert("Game is over");
+      setValues.update(
+        { songnumber: game.songnumber + 1 },
+        { gameStarted: false },
+        { revealClick: null }
+      );
+    }
     setValues.update(
-      { songnumber: game.songnumber + 1 },
-      { revealClick: null }
+      { revealClick: null },
+      { songnumber: game.songnumber + 1 }
     );
   }
 

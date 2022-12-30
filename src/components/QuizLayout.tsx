@@ -19,7 +19,7 @@ function QuizLayout(props: any) {
   const [words, setWords] = useState(songs[0]);
   const teams = ["nagell", "gisle"];
   const audio = new Audio(sound);
-  let currentcolors = shuffle([0, 0, 1, 1, 0, 1]);
+  let currentcolors = [0, 0, 1, 1, 0, 1];
   if (currentClick !== game.revealClick) {
     setCurrentClick(game.revealClick);
     handleClick(game.revealClick);
@@ -63,9 +63,9 @@ function QuizLayout(props: any) {
     <>
       <div className="boxes">
         {words.map((value: string, key: number) => (
-          <p id={key + ""} key={value + ""}>
-            {key + 1}
-          </p>
+          <div key={value + key}>
+            <p id={key + ""}>{key + 1}</p>
+          </div>
         ))}
       </div>
       <div className="gameArea">
