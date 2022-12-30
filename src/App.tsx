@@ -11,6 +11,7 @@ import SongSelection from "./components/SongSelection";
 import ControlGame from "./components/ControlGame";
 import { Content, Header } from "antd/es/layout/layout";
 import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import Title from "antd/es/skeleton/Title";
 
 let isGameCreated = false;
 
@@ -63,13 +64,20 @@ function App() {
     <div className="App">
       {gamestarted && qrRender && <QuizLayout game={game} />}
       {qrRender && (
-        <QRCode
-          errorLevel="H"
-          value={
-            process.env.REACT_APP_REDIRECTURL! + localStorage.getItem("gameID")
-          }
-          icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        />
+        <div className="centercontent">
+          {" "}
+          <h1>
+            Ivar Dyrhaug scanner QR-koden med mobilen og kobler denne skjermen
+            til en storskjerm!
+          </h1>
+          <QRCode
+            errorLevel="H"
+            value={
+              process.env.REACT_APP_REDIRECTURL! +
+              localStorage.getItem("gameID")
+            }
+          />
+        </div>
       )}
       {!gamestarted && !qrRender && <ChatRoom />}
       {gamestarted && !qrRender && <ControlGame save={gamesRef} game={game} />}
@@ -133,63 +141,51 @@ function ChatRoom() {
   };
   return (
     <>
-      <Layout>
-        <Header style={{ zIndex: 1, width: "100%" }}>
-          <div
-            style={{
-              float: "left",
-              width: 120,
-              height: 31,
-              margin: "16px 24px 16px 0",
-            }}
-          >
-            <Typography style={{ color: "white", alignItems: "center" }}>
-              {" "}
-              Beat for beat
-            </Typography>
-          </div>
-        </Header>
-        <Content className="site-layout" style={{ padding: "0 20%" }}>
-          <form onSubmit={addSong}>
-            <label>Artist:</label>
-            <Input
-              type="text"
-              value={formValue[0]}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormValue([[e.target.value], formValue[1], formValue[2]])
-              }
-            />
-            <label>Title:</label>
-            <Input
-              required
-              type="text"
-              value={formValue[1]}
-              onChange={(e) =>
-                setFormValue([formValue[0], [e.target.value], formValue[2]])
-              }
-            />
-            <label>lyrics (Write between 5 or 6 words)</label>
-            <Input
-              required
-              type="text"
-              value={formValue[2]}
-              onChange={(e) =>
-                setFormValue([formValue[0], formValue[1], [e.target.value]])
-              }
-            />
-            <Button type="default" htmlType="submit">
-              Send
-            </Button>
-          </form>
-          <div>
-            <h1>Choose songs</h1>
-            {loading && <Spin size="large" />}
-            {fetchedSongs && (
-              <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
-            )}
-          </div>
-        </Content>
-      </Layout>
+      <Typography style={{ color: "black", alignItems: "center" }}>
+        {" "}
+        Beat for beat
+      </Typography>
+
+      <Content className="site-layout" style={{ padding: "0 5%" }}>
+        <form onSubmit={addSong}>
+          <label>Artist:</label>
+          <Input
+            type="text"
+            value={formValue[0]}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormValue([[e.target.value], formValue[1], formValue[2]])
+            }
+          />
+          <label>Title:</label>
+          <Input
+            required
+            type="text"
+            value={formValue[1]}
+            onChange={(e) =>
+              setFormValue([formValue[0], [e.target.value], formValue[2]])
+            }
+          />
+          <label>lyrics (Write between 5 or 6 words)</label>
+          <Input
+            required
+            type="text"
+            value={formValue[2]}
+            onChange={(e) =>
+              setFormValue([formValue[0], formValue[1], [e.target.value]])
+            }
+          />
+          <Button type="default" htmlType="submit">
+            Send
+          </Button>
+        </form>
+        <div>
+          <h1>Choose songs</h1>
+          {loading && <Spin size="large" />}
+          {fetchedSongs && (
+            <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
+          )}
+        </div>
+      </Content>
     </>
   );
 }
