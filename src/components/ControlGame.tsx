@@ -74,7 +74,7 @@ function ControlGame(props: any) {
         </div>
       </div>
 
-      {game.songs.length === game.songnumber + 1 && (
+      {!(game.songs.length === game.songnumber + 1) && (
         <Button type="primary" size="large" onClick={() => nextSong()}>
           {" "}
           Next song{" "}
