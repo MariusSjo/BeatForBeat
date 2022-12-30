@@ -31,9 +31,7 @@ let qrRender = false;
 function App() {
   const url = new URL(window.location.href);
   let gameID: any = localStorage.getItem("gameID");
-  console.log(url.pathname);
   if (url.pathname.length < 2) {
-    console.log(url.pathname.length);
     qrRender = true;
   } else {
     gameID = url.pathname.substring(1);
@@ -41,10 +39,8 @@ function App() {
   }
   const gamesRef = firestore.collection("games");
   if (gameID === null && !isGameCreated) {
-    console.log("creating new game");
     isGameCreated = true;
     gameID = createNewGame(gamesRef);
-    console.log(gameID);
   }
 
   //@ts-ignore
@@ -57,12 +53,10 @@ function App() {
       localStorage.gameID
     );
   const [game, loadingGame, error] = useCollectionData(query(query1));
-  console.log(game, loadingGame, error);
   if (!loadingGame) {
     //@ts-ignore
     gamestarted = game[0].gameStarted;
     //@ts-ignore
-    console.log(gamestarted);
   }
 
   return (
@@ -101,9 +95,8 @@ async function createNewGame(save: any): Promise<any> {
       gameStarted: false,
     })
     .then((docRef: any) => {
-      console.log("Document written with ID: ", docRef.id);
       localStorage.setItem("gameID", docRef.id);
-      return docRef.id;
+      location.reload();
     })
     .error((error: any) => {
       console.error("Error adding document: ", error);
@@ -129,16 +122,12 @@ function ChatRoom() {
     )
       alert("Please write between 5 and 6 words");
     else {
-      await messagesRef
-        .add({
-          artist: formValue[0][0],
-          name: formValue[1][0],
-          lyrics: formValue[2][0],
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-        });
+      await messagesRef.add({
+        artist: formValue[0][0],
+        name: formValue[1][0],
+        lyrics: formValue[2][0],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
       setFormValue([[""], [""], [""]]);
     }
   };

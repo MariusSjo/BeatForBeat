@@ -4,7 +4,6 @@ import "./QuizLayout.css";
 import sound from "../assets/sound/wrong.mp3";
 
 function QuizLayout(props: any) {
-  console.log("here are props: ", props);
   const [currentSong, setCurrentSong] = useState(0);
   const [currentClick, setCurrentClick] = useState(null);
   if (props.game === undefined) {
@@ -12,11 +11,10 @@ function QuizLayout(props: any) {
   }
   const game = props.game[0];
   const songnumber = game.songnumber;
-  console.log("here is game: ", game);
   const songs = game.songs.map((element: any) => {
     return element.lyrics.split(" ");
   });
-  const [words, setWords] = useState(songs[0]);
+  const [words, setWords] = useState(songs[game.songnumber]);
   const teams = ["nagell", "gisle"];
   const audio = new Audio(sound);
   let currentcolors = [0, 0, 1, 1, 0, 1];

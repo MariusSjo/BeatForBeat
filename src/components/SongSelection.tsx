@@ -101,19 +101,20 @@ function changeObject(songs: [RecordType]): RecordType[] {
 function SongSelection(songs: any) {
   const save = songs.saveToFirebase;
   const displaySongs = changeObject(songs.song);
-  console.log(localStorage.getItem("gameID"));
-
   const [selectedSongs, setSelectedSongs] = useState<string[]>();
   const onChange = (nextSelectedSongs: string[]) => {
     setSelectedSongs(nextSelectedSongs);
   };
 
   function saveSongs(): void {
+    const filteredSongs = displaySongs.filter((song: any) =>
+      selectedSongs?.includes(song.key)
+    );
     save.doc(localStorage.getItem("gameID")).update({
       gameStarted: true,
-      songs: displaySongs.filter((song: any) =>
-        selectedSongs?.includes(song.key)
-      ),
+    });
+    save.doc(localStorage.getItem("gameID")).update({
+      songs: filteredSongs,
     });
   }
 

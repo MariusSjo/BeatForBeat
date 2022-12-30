@@ -112,7 +112,6 @@ function ControlGame(props: any) {
 
   function revealBox(index: number) {
     setValues.update({ revealClick: index });
-    console.log(index);
   }
 
   function newGame() {
