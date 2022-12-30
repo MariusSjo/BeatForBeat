@@ -93,7 +93,6 @@ export interface song {
 async function createNewGame(save: any): Promise<any> {
   await save
     .add({
-      revealed: [0, 0, 0, 0, 0, 0],
       songnumber: 0,
       revealClick: null,
       points1: 0,

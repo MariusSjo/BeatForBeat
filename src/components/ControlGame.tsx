@@ -19,6 +19,12 @@ function ControlGame(props: any) {
 
   return (
     <div>
+      {game.songs.length === game.songnumber + 1 && (
+        <Button type="primary" size="large" onClick={() => newGame()}>
+          {" "}
+          New game{" "}
+        </Button>
+      )}
       <Title>Game controller</Title>
       <div className="revealButtons">{songlength && buttons}</div>
       <Title>Current song:</Title>
@@ -68,10 +74,12 @@ function ControlGame(props: any) {
         </div>
       </div>
 
-      <Button type="primary" size="large" onClick={() => nextSong()}>
-        {" "}
-        Next song{" "}
-      </Button>
+      {game.songs.length === game.songnumber + 1 && (
+        <Button type="primary" size="large" onClick={() => nextSong()}>
+          {" "}
+          Next song{" "}
+        </Button>
+      )}
     </div>
   );
 
@@ -91,10 +99,9 @@ function ControlGame(props: any) {
     }
   }
   function nextSong() {
-    if (game.songs.length === game.songnumber) {
-      alert("Game is over");
+    if (game.songs.length === game.songnumber + 1) {
+      alert("Game is over!!");
       setValues.update({ songnumber: game.songnumber + 1 });
-      setValues.update({ gameStarted: false });
       setValues.update({ revealClick: null });
       return;
     } else {
@@ -106,6 +113,14 @@ function ControlGame(props: any) {
   function revealBox(index: number) {
     setValues.update({ revealClick: index });
     console.log(index);
+  }
+
+  function newGame() {
+    setValues.update({ gameStarted: false });
+    setValues.update({ songnumber: 0 });
+    setValues.update({ revealClick: null });
+    setValues.update({ points1: 0 });
+    setValues.update({ points2: 0 });
   }
 }
 export default ControlGame;
