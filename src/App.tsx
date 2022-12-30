@@ -71,7 +71,9 @@ function App() {
       {qrRender && (
         <QRCode
           errorLevel="H"
-          value={"http://localhost:3000/" + localStorage.getItem("gameID")}
+          value={
+            process.env.REACT_APP_REDIRECTURL! + localStorage.getItem("gameID")
+          }
           icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
         />
       )}
