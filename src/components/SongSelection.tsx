@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Switch, Table, Tag, Transfer } from "antd";
+import { Button, Table, Tag, Transfer } from "antd";
 import type { ColumnsType, TableRowSelection } from "antd/es/table/interface";
 import type { TransferItem, TransferProps } from "antd/es/transfer";
-import type { song } from "../App";
-import difference from "lodash/difference";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
 
 interface RecordType {
   key: string;
@@ -14,7 +14,7 @@ interface RecordType {
 
 interface TableTransferProps extends TransferProps<TransferItem> {
   dataSource: RecordType[];
-  leftColumns: ColumnsType<song>;
+  leftColumns: ColumnsType<RecordType>;
   rightColumns: any;
 }
 
@@ -29,21 +29,12 @@ const TableTransfer = ({
     {({
       direction,
       filteredItems,
-      onItemSelectAll,
+      /* onItemSelectAll, */
       onItemSelect,
       selectedKeys: listSelectedKeys,
     }) => {
       const columns = direction === "left" ? leftColumns : rightColumns;
       const rowSelection: TableRowSelection<TransferItem> = {
-        onSelectAll(selected, selectedRows) {
-          const treeSelectedKeys = selectedRows
-            .filter((item) => !item.disabled)
-            .map(({ key }) => key);
-          const diffKeys = selected
-            ? difference(treeSelectedKeys, listSelectedKeys)
-            : difference(listSelectedKeys, treeSelectedKeys);
-          onItemSelectAll(diffKeys as string[], selected);
-        },
         onSelect({ key }, selected) {
           onItemSelect(key as string, selected);
         },
@@ -70,7 +61,7 @@ const TableTransfer = ({
   </Transfer>
 );
 
-const leftTableColumns: ColumnsType<song> = [
+const leftTableColumns: ColumnsType<RecordType> = [
   {
     dataIndex: "name",
     title: "Song title",
@@ -86,7 +77,7 @@ const leftTableColumns: ColumnsType<song> = [
   },
 ];
 
-const rightTableColumns: ColumnsType<Pick<song, "name">> = [
+const rightTableColumns: ColumnsType<Pick<RecordType, "name">> = [
   {
     dataIndex: "name",
     title: "Song title",
@@ -108,19 +99,24 @@ function changeObject(songs: [RecordType]): RecordType[] {
 }
 
 function SongSelection(songs: any) {
+  const save = songs.saveToFirebase;
   const displaySongs = changeObject(songs.song);
-  console.log(displaySongs);
+  console.log(localStorage.getItem("gameID"));
 
   const [selectedSongs, setSelectedSongs] = useState<string[]>();
   const onChange = (nextSelectedSongs: string[]) => {
     setSelectedSongs(nextSelectedSongs);
   };
-  localStorage.setItem(
-    "displaySongs",
-    JSON.stringify(
-      displaySongs.filter((song: any) => selectedSongs?.includes(song.key))
-    )
-  );
+
+  function saveSongs(): void {
+    save.doc(localStorage.getItem("gameID")).update({
+      gameStarted: true,
+      songs: displaySongs.filter((song: any) =>
+        selectedSongs?.includes(song.key)
+      ),
+    });
+  }
+
   return (
     <>
       {
@@ -129,16 +125,19 @@ function SongSelection(songs: any) {
           dataSource={displaySongs}
           targetKeys={selectedSongs}
           disabled={false}
-          showSearch={true}
           onChange={onChange}
           filterOption={(inputValue, item) =>
-            item.title!.indexOf(inputValue) !== -1 ||
+            item.name!.indexOf(inputValue) !== -1 ||
             item.artist.indexOf(inputValue) !== -1
           }
           leftColumns={leftTableColumns}
           rightColumns={rightTableColumns}
         />
       }
+      <Button onClick={() => saveSongs()}>
+        {" "}
+        Save song selection and start game
+      </Button>
     </>
   );
 }
