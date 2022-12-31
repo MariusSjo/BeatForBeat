@@ -60,11 +60,12 @@ function QuizLayout(props: any) {
   return (
     <>
       <div className="boxes">
-        {words.map((value: string, key: number) => (
-          <div key={value + key}>
-            <p id={key + ""}>{key + 1}</p>
-          </div>
-        ))}
+        {words &&
+          words.map((value: string, key: number) => (
+            <div key={value + key}>
+              <p id={key + ""}>{key + 1}</p>
+            </div>
+          ))}
       </div>
       <div className="gameArea">
         <div className="points">
