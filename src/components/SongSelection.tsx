@@ -9,7 +9,7 @@ interface RecordType {
   key: string;
   name: string;
   lyrics: string;
-  artist: string;
+  artist?: string;
 }
 
 interface TableTransferProps extends TransferProps<TransferItem> {
@@ -66,11 +66,11 @@ const leftTableColumns: ColumnsType<RecordType> = [
     dataIndex: "name",
     title: "Song title",
   },
-  {
+  /*   {
     dataIndex: "artist",
     title: "Artist",
     render: (Artist) => <Tag>{Artist}</Tag>,
-  },
+  }, */
   {
     dataIndex: "lyrics",
     title: "Lyrics",
@@ -89,7 +89,7 @@ function changeObject(songs: [RecordType]): RecordType[] {
   for (let i = 0; i < songs.length; i++) {
     const newSongFormat: RecordType = {
       name: songs[i].name,
-      artist: songs[i].artist,
+      /* artist: songs[i].artist, */
       lyrics: songs[i].lyrics,
       key: i + "",
     };
@@ -126,23 +126,22 @@ function SongSelection(songs: any) {
     <>
       {
         <TableTransfer
+          style={{ left: "-5%" }}
           titles={["Available songs to pick", "Selected Songs"]}
           dataSource={displaySongs}
           targetKeys={selectedSongs}
           disabled={false}
           onChange={onChange}
-          filterOption={(inputValue, item) =>
-            item.name!.indexOf(inputValue) !== -1 ||
-            item.artist.indexOf(inputValue) !== -1
-          }
           leftColumns={leftTableColumns}
           rightColumns={rightTableColumns}
         />
       }
-      <Button onClick={() => saveSongs()}>
-        {" "}
-        Save song selection and start game
-      </Button>
+      <div style={{ paddingTop: "5%" }}>
+        <Button type="primary" onClick={() => saveSongs()}>
+          {" "}
+          Save song selection and start game
+        </Button>
+      </div>
     </>
   );
 }
