@@ -110,11 +110,14 @@ function SongSelection(songs: any) {
     const filteredSongs = displaySongs.filter((song: any) =>
       selectedSongs?.includes(song.key)
     );
-    save.doc(localStorage.getItem("gameID")).update({
-      gameStarted: true,
-    });
+    if (filteredSongs.length < 1) {
+      alert("Please select at least one song");
+    }
     save.doc(localStorage.getItem("gameID")).update({
       songs: filteredSongs,
+    });
+    save.doc(localStorage.getItem("gameID")).update({
+      gameStarted: true,
     });
   }
 
