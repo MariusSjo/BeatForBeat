@@ -54,16 +54,22 @@ function App() {
       localStorage.gameID
     );
   const [game, loadingGame, error] = useCollectionData(query(query1));
+  console.log(game, loadingGame, error);
   if (!loadingGame) {
-    //@ts-ignore
-    gamestarted = game[0].gameStarted;
-    //@ts-ignore
+    if (game?.length === 0) {
+      console.log(error);
+      localStorage.removeItem("gameID");
+      document.location.href = "/";
+    } else {
+      //@ts-ignore
+      gamestarted = game[0].gameStarted;
+    }
   }
 
   return (
     <div className="App">
       {gamestarted && qrRender && <QuizLayout game={game} />}
-      {qrRender && (
+      {qrRender && !gamestarted && (
         <div className="centercontent">
           {" "}
           <h1>

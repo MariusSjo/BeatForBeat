@@ -112,6 +112,7 @@ function SongSelection(songs: any) {
     );
     if (filteredSongs.length < 1) {
       alert("Please select at least one song");
+      return;
     }
     save.doc(localStorage.getItem("gameID")).update({
       songs: filteredSongs,
