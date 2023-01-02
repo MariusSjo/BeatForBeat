@@ -7,7 +7,6 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import SongSelection from "./components/SongSelection";
-//@ts-ignore
 import ControlGame from "./components/ControlGame";
 import { Content, Header } from "antd/es/layout/layout";
 import { collection, doc, getDoc, query, where } from "firebase/firestore";
@@ -44,8 +43,6 @@ function App() {
     gameID = createNewGame(gamesRef);
   }
 
-  //@ts-ignore
-
   const query1 = firestore
     .collection("games")
     .where(
@@ -61,8 +58,9 @@ function App() {
       localStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
-      //@ts-ignore
-      gamestarted = game[0].gameStarted;
+      if (game !== undefined) {
+        gamestarted = game[0].gameStarted;
+      }
     }
   }
 
@@ -123,7 +121,6 @@ function ChatRoom() {
   const messagesRef = firestore.collection("messages");
   const gamesRef = firestore.collection("games");
   const query: any = messagesRef;
-  // @ts-ignore
   const [fetchedSongs, loading] = useCollectionData<any>(query, {
     idField: "id",
   } as any);
