@@ -8,6 +8,7 @@ import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import SongSelection from "./components/SongSelection";
 import ControlGame from "./components/ControlGame";
+import GameConfiguration from "./components/GameConfiguration";
 import { Content, Header } from "antd/es/layout/layout";
 import { collection, doc, getDoc, query, where } from "firebase/firestore";
 import Title from "antd/es/skeleton/Title";
@@ -42,19 +43,15 @@ function App() {
     isGameCreated = true;
     gameID = createNewGame(gamesRef);
   }
-
-  const query1 = firestore
-    .collection("games")
-    .where(
-      firebase.firestore.FieldPath.documentId(),
-      "==",
-      localStorage.gameID
-    );
-  const [game, loadingGame, error] = useCollectionData(query(query1));
-  console.log(game, loadingGame, error);
+  const specificGame = gamesRef.where(
+    firebase.firestore.FieldPath.documentId(),
+    "==",
+    localStorage.gameID
+  );
+  const [game, loadingGame, error] = useCollectionData(query(specificGame));
   if (!loadingGame) {
     if (game?.length === 0) {
-      console.log(error);
+      console.error(error);
       localStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
@@ -83,17 +80,10 @@ function App() {
           />
         </div>
       )}
-      {!gamestarted && !qrRender && <ChatRoom />}
+      {!gamestarted && !qrRender && <GameConfiguration fire={firestore} />}
       {gamestarted && !qrRender && <ControlGame save={gamesRef} game={game} />}
     </div>
   );
-}
-
-export interface song {
-  name: string;
-  artist: string;
-  lyrics: string;
-  key: string;
 }
 
 async function createNewGame(save: any): Promise<any> {
@@ -114,83 +104,6 @@ async function createNewGame(save: any): Promise<any> {
       console.error("Error adding document: ", error);
       return error;
     });
-}
-
-function ChatRoom() {
-  const [formValue, setFormValue] = useState([[""], [""], [""]]);
-  const messagesRef = firestore.collection("messages");
-  const gamesRef = firestore.collection("games");
-  const query: any = messagesRef;
-  const [fetchedSongs, loading] = useCollectionData<any>(query, {
-    idField: "id",
-  } as any);
-
-  const addSong = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      formValue[2][0].split(" ").length < 5 ||
-      formValue[2][0].split(" ").length > 6
-    )
-      alert("Please write between 5 and 6 words");
-    else {
-      await messagesRef.add({
-        artist: formValue[0][0],
-        name: formValue[1][0],
-        lyrics: formValue[2][0],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
-      setFormValue([[""], [""], [""]]);
-    }
-  };
-  return (
-    <>
-      <Typography style={{ color: "black", alignItems: "center" }}>
-        {" "}
-        Beat for beat
-      </Typography>
-
-      <Content className="site-layout" style={{ padding: "0 5%" }}>
-        <form onSubmit={addSong}>
-          <label>Artist:</label>
-          <Input
-            type="text"
-            value={formValue[0]}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormValue([[e.target.value], formValue[1], formValue[2]])
-            }
-          />
-          <label>Title:</label>
-          <Input
-            required
-            type="text"
-            value={formValue[1]}
-            onChange={(e) =>
-              setFormValue([formValue[0], [e.target.value], formValue[2]])
-            }
-          />
-          <label>lyrics (Write between 5 or 6 words)</label>
-          <Input
-            required
-            type="text"
-            value={formValue[2]}
-            onChange={(e) =>
-              setFormValue([formValue[0], formValue[1], [e.target.value]])
-            }
-          />
-          <Button type="default" htmlType="submit">
-            Send
-          </Button>
-        </form>
-        <div>
-          <h1>Choose songs</h1>
-          {loading && <Spin size="large" />}
-          {fetchedSongs && (
-            <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
-          )}
-        </div>
-      </Content>
-    </>
-  );
 }
 
 export default App;
