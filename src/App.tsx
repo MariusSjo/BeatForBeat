@@ -6,12 +6,9 @@ import { Button, Input, Layout, QRCode, Spin, Typography } from "antd";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import SongSelection from "./components/SongSelection";
 import ControlGame from "./components/ControlGame";
 import GameConfiguration from "./components/GameConfiguration";
-import { Content, Header } from "antd/es/layout/layout";
-import { collection, doc, getDoc, query, where } from "firebase/firestore";
-import Title from "antd/es/skeleton/Title";
+import { query } from "firebase/firestore";
 
 let isGameCreated = false;
 
@@ -27,16 +24,16 @@ firebase.initializeApp({
 
 const firestore = firebase.firestore();
 let gamestarted = false;
-let qrRender = false;
+let isDesktop = false;
 
 function App() {
   const url = new URL(window.location.href);
-  let gameID: any = localStorage.getItem("gameID");
+  let gameID: any = sessionStorage.getItem("gameID");
   if (url.pathname.length < 2) {
-    qrRender = true;
+    isDesktop = true;
   } else {
     gameID = url.pathname.substring(1);
-    localStorage.setItem("gameID", gameID);
+    sessionStorage.setItem("gameID", gameID);
   }
   const gamesRef = firestore.collection("games");
   if (gameID === null && !isGameCreated) {
@@ -46,13 +43,13 @@ function App() {
   const specificGame = gamesRef.where(
     firebase.firestore.FieldPath.documentId(),
     "==",
-    localStorage.gameID
+    sessionStorage.gameID
   );
   const [game, loadingGame, error] = useCollectionData(query(specificGame));
   if (!loadingGame) {
     if (game?.length === 0) {
       console.error(error);
-      localStorage.removeItem("gameID");
+      sessionStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
       if (game !== undefined) {
@@ -63,8 +60,8 @@ function App() {
 
   return (
     <div className="App">
-      {gamestarted && qrRender && <QuizLayout game={game} />}
-      {qrRender && !gamestarted && (
+      {gamestarted && isDesktop && <QuizLayout game={game} />}
+      {isDesktop && !gamestarted && (
         <div className="centercontent">
           {" "}
           <h1>
@@ -75,13 +72,13 @@ function App() {
             errorLevel="H"
             value={
               process.env.REACT_APP_REDIRECTURL! +
-              localStorage.getItem("gameID")
+              sessionStorage.getItem("gameID")
             }
           />
         </div>
       )}
-      {!gamestarted && !qrRender && <GameConfiguration fire={firestore} />}
-      {gamestarted && !qrRender && <ControlGame save={gamesRef} game={game} />}
+      {!gamestarted && !isDesktop && <GameConfiguration fire={firestore} />}
+      {gamestarted && !isDesktop && <ControlGame save={gamesRef} game={game} />}
     </div>
   );
 }
@@ -97,7 +94,7 @@ async function createNewGame(save: any): Promise<any> {
       gameStarted: false,
     })
     .then((docRef: any) => {
-      localStorage.setItem("gameID", docRef.id);
+      sessionStorage.setItem("gameID", docRef.id);
       location.reload();
     })
     .error((error: any) => {

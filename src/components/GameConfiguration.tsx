@@ -7,9 +7,12 @@ import Spin from "antd/es/spin";
 import Typography from "antd/es/typography";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-function GameConfiguration(props: any) {
+interface GameConfigurationProps {
+  fire: any;
+}
+
+function GameConfiguration(props: GameConfigurationProps) {
   const firestore = props.fire;
-  console.log(firestore);
   const [formValue, setFormValue] = useState(["", "", ""]);
   const messagesRef = firestore.collection("messages");
   const gamesRef = firestore.collection("games");
@@ -21,8 +24,8 @@ function GameConfiguration(props: any) {
   const addSong = async (submit: React.FormEvent) => {
     submit.preventDefault();
     if (
-      formValue[2][0].split(" ").length < 5 ||
-      formValue[2][0].split(" ").length > 6
+      formValue[2].split(" ").length < 5 ||
+      formValue[2].split(" ").length > 6
     )
       alert("Please write between 5 and 6 words");
     else {
@@ -30,7 +33,6 @@ function GameConfiguration(props: any) {
         artist: formValue[0],
         name: formValue[1],
         lyrics: formValue[2],
-        createdAt: firestore.FieldValue.serverTimestamp(),
       });
       setFormValue(["", "", ""]);
     }
