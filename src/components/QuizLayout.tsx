@@ -69,8 +69,18 @@ function QuizLayout(props: any) {
       </div>
       <div className="gameArea">
         <div className="points">
-          <input className="gisle" type="number" value={game.points1} />
-          <input className="nagell" type="number" value={game.points2} />
+          <input
+            className="gisle"
+            type="number"
+            readOnly
+            value={game.points1}
+          />
+          <input
+            className="nagell"
+            type="number"
+            readOnly
+            value={game.points2}
+          />
         </div>
         <div className="competitors">
           <Teamcomponent name={"gisle"} />

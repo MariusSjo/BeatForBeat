@@ -1,16 +1,14 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuizLayout from "./components/QuizLayout";
 import firebase from "firebase/compat/app";
-import { Button, Input, Layout, QRCode, Spin, Typography } from "antd";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import ControlGame from "./components/ControlGame";
 import GameConfiguration from "./components/GameConfiguration";
 import { query } from "firebase/firestore";
-
-let isGameCreated = false;
+import DesktopView from "./components/DesktopView";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -24,83 +22,94 @@ firebase.initializeApp({
 
 const firestore = firebase.firestore();
 let gamestarted = false;
-let isDesktop = false;
+const url = new URL(window.location.href);
+let currentGameQuery: any;
 
 function App() {
-  const url = new URL(window.location.href);
-  let gameID: any = sessionStorage.getItem("gameID");
-  if (url.pathname.length < 2) {
-    isDesktop = true;
-  } else {
-    gameID = url.pathname.substring(1);
-    sessionStorage.setItem("gameID", gameID);
-  }
+  const [gameID, setGameID] = useState(sessionStorage.getItem("gameID"));
+  const isDesktop = checkDevice();
   const gamesRef = firestore.collection("games");
-  if (gameID === null && !isGameCreated) {
-    isGameCreated = true;
-    gameID = createNewGame(gamesRef);
+  if (gameID !== null) {
+    currentGameQuery = gamesRef.where(
+      firebase.firestore.FieldPath.documentId(),
+      "==",
+      gameID
+    );
   }
-  const specificGame = gamesRef.where(
-    firebase.firestore.FieldPath.documentId(),
-    "==",
-    sessionStorage.gameID
-  );
-  const [game, loadingGame, error] = useCollectionData(query(specificGame));
+  const [game, loadingGame] = useCollectionData(query(currentGameQuery));
   if (!loadingGame) {
     if (game?.length === 0) {
-      console.error(error);
+      console.error("should be redrieted home");
       sessionStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
       if (game !== undefined) {
+        //@ts-ignore
         gamestarted = game[0].gameStarted;
       }
     }
   }
 
+  async function CheckForActiveGame() {
+    const id = await getGameID();
+    //@ts-ignore
+    setGameID(id);
+    sessionStorage.setItem("gameID", id!);
+  }
+
+  useEffect(() => {
+    CheckForActiveGame();
+  }, []);
+
   return (
     <div className="App">
-      {gamestarted && isDesktop && <QuizLayout game={game} />}
-      {isDesktop && !gamestarted && (
-        <div className="centercontent">
-          {" "}
-          <h1>
-            Ivar Dyrhaug scanner QR-koden med mobilen og kobler denne skjermen
-            til en storskjerm!
-          </h1>
-          <QRCode
-            errorLevel="H"
-            value={
-              process.env.REACT_APP_REDIRECTURL! +
-              sessionStorage.getItem("gameID")
-            }
-          />
-        </div>
+      {isDesktop ? (
+        gamestarted ? (
+          <QuizLayout game={game} />
+        ) : (
+          <DesktopView props={gameID} />
+        )
+      ) : gamestarted ? (
+        <ControlGame save={gamesRef} game={game} />
+      ) : (
+        <GameConfiguration fire={firestore} />
       )}
-      {!gamestarted && !isDesktop && <GameConfiguration fire={firestore} />}
-      {gamestarted && !isDesktop && <ControlGame save={gamesRef} game={game} />}
     </div>
   );
-}
 
-async function createNewGame(save: any): Promise<any> {
-  await save
-    .add({
+  function checkDevice(): boolean {
+    return url.pathname.length < 2;
+  }
+
+  async function getGameID(): Promise<string | null> {
+    if (isDesktop) {
+      const gameIDSessionstorage = sessionStorage.getItem("gameID");
+      if (gameIDSessionstorage === null) {
+        return await createGameID();
+      }
+      return gameIDSessionstorage;
+    } else {
+      sessionStorage.setItem("gameID", url.pathname.substring(1));
+      return url.pathname.substring(1);
+    }
+  }
+
+  async function createGameID() {
+    const document = await createNewGame();
+    setGameID(document.id);
+    sessionStorage.setItem("gameID", gameID!);
+    return document.id;
+  }
+
+  async function createNewGame(): Promise<any> {
+    return await gamesRef.add({
       songnumber: 0,
       revealClick: null,
       points1: 0,
       points2: 0,
       songs: [],
       gameStarted: false,
-    })
-    .then((docRef: any) => {
-      sessionStorage.setItem("gameID", docRef.id);
-      location.reload();
-    })
-    .error((error: any) => {
-      console.error("Error adding document: ", error);
-      return error;
     });
+  }
 }
-
 export default App;
