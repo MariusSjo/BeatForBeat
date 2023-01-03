@@ -4,7 +4,7 @@ import React from "react";
 import "./ControlGame.css";
 
 function ControlGame(props: any) {
-  const setValues = props.save.doc(localStorage.getItem("gameID"));
+  const setValues = props.save.doc(sessionStorage.getItem("gameID"));
   const game = props.game[0];
   const songlength = game.songs[game.songnumber].lyrics.split(" ").length;
   const buttons = [];

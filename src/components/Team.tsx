@@ -5,7 +5,7 @@ type Props = { name: string };
 function Team({ name }: Props) {
   return (
     <div className={name}>
-      <input className="points" type="text" />
+      <input readOnly className="points" type="text" />
     </div>
   );
 }

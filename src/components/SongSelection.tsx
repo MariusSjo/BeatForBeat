@@ -114,10 +114,10 @@ function SongSelection(songs: any) {
       alert("Please select at least one song");
       return;
     }
-    save.doc(localStorage.getItem("gameID")).update({
+    save.doc(sessionStorage.getItem("gameID")).update({
       songs: filteredSongs,
     });
-    save.doc(localStorage.getItem("gameID")).update({
+    save.doc(sessionStorage.getItem("gameID")).update({
       gameStarted: true,
     });
   }

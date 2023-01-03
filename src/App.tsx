@@ -1,19 +1,14 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuizLayout from "./components/QuizLayout";
 import firebase from "firebase/compat/app";
-import { Button, Input, Layout, QRCode, Spin, Typography } from "antd";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import SongSelection from "./components/SongSelection";
-//@ts-ignore
 import ControlGame from "./components/ControlGame";
-import { Content, Header } from "antd/es/layout/layout";
-import { collection, doc, getDoc, query, where } from "firebase/firestore";
-import Title from "antd/es/skeleton/Title";
-
-let isGameCreated = false;
+import GameConfiguration from "./components/GameConfiguration";
+import { query } from "firebase/firestore";
+import DesktopView from "./components/DesktopView";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -27,173 +22,94 @@ firebase.initializeApp({
 
 const firestore = firebase.firestore();
 let gamestarted = false;
-let qrRender = false;
+const url = new URL(window.location.href);
+let currentGameQuery: any;
 
 function App() {
-  const url = new URL(window.location.href);
-  let gameID: any = localStorage.getItem("gameID");
-  if (url.pathname.length < 2) {
-    qrRender = true;
-  } else {
-    gameID = url.pathname.substring(1);
-    localStorage.setItem("gameID", gameID);
-  }
+  const [gameID, setGameID] = useState(sessionStorage.getItem("gameID"));
+  const isDesktop = checkDevice();
   const gamesRef = firestore.collection("games");
-  if (gameID === null && !isGameCreated) {
-    isGameCreated = true;
-    gameID = createNewGame(gamesRef);
-  }
-
-  //@ts-ignore
-
-  const query1 = firestore
-    .collection("games")
-    .where(
+  if (gameID !== null) {
+    currentGameQuery = gamesRef.where(
       firebase.firestore.FieldPath.documentId(),
       "==",
-      localStorage.gameID
+      gameID
     );
-  const [game, loadingGame, error] = useCollectionData(query(query1));
-  console.log(game, loadingGame, error);
+  }
+  const [game, loadingGame] = useCollectionData(query(currentGameQuery));
   if (!loadingGame) {
     if (game?.length === 0) {
-      console.log(error);
-      localStorage.removeItem("gameID");
+      console.error("should be redrieted home");
+      sessionStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
-      //@ts-ignore
-      gamestarted = game[0].gameStarted;
+      if (game !== undefined) {
+        //@ts-ignore
+        gamestarted = game[0].gameStarted;
+      }
     }
   }
 
+  async function CheckForActiveGame() {
+    const id = await getGameID();
+    //@ts-ignore
+    setGameID(id);
+    sessionStorage.setItem("gameID", id!);
+  }
+
+  useEffect(() => {
+    CheckForActiveGame();
+  }, []);
+
   return (
     <div className="App">
-      {gamestarted && qrRender && <QuizLayout game={game} />}
-      {qrRender && !gamestarted && (
-        <div className="centercontent">
-          {" "}
-          <h1>
-            Ivar Dyrhaug scanner QR-koden med mobilen og kobler denne skjermen
-            til en storskjerm!
-          </h1>
-          <QRCode
-            errorLevel="H"
-            value={
-              process.env.REACT_APP_REDIRECTURL! +
-              localStorage.getItem("gameID")
-            }
-          />
-        </div>
+      {isDesktop ? (
+        gamestarted ? (
+          <QuizLayout game={game} />
+        ) : (
+          <DesktopView props={gameID} />
+        )
+      ) : gamestarted ? (
+        <ControlGame save={gamesRef} game={game} />
+      ) : (
+        <GameConfiguration fire={firestore} />
       )}
-      {!gamestarted && !qrRender && <ChatRoom />}
-      {gamestarted && !qrRender && <ControlGame save={gamesRef} game={game} />}
     </div>
   );
-}
 
-export interface song {
-  name: string;
-  artist: string;
-  lyrics: string;
-  key: string;
-}
+  function checkDevice(): boolean {
+    return url.pathname.length < 2;
+  }
 
-async function createNewGame(save: any): Promise<any> {
-  await save
-    .add({
+  async function getGameID(): Promise<string | null> {
+    if (isDesktop) {
+      const gameIDSessionstorage = sessionStorage.getItem("gameID");
+      if (gameIDSessionstorage === null) {
+        return await createGameID();
+      }
+      return gameIDSessionstorage;
+    } else {
+      sessionStorage.setItem("gameID", url.pathname.substring(1));
+      return url.pathname.substring(1);
+    }
+  }
+
+  async function createGameID() {
+    const document = await createNewGame();
+    setGameID(document.id);
+    sessionStorage.setItem("gameID", gameID!);
+    return document.id;
+  }
+
+  async function createNewGame(): Promise<any> {
+    return await gamesRef.add({
       songnumber: 0,
       revealClick: null,
       points1: 0,
       points2: 0,
       songs: [],
       gameStarted: false,
-    })
-    .then((docRef: any) => {
-      localStorage.setItem("gameID", docRef.id);
-      location.reload();
-    })
-    .error((error: any) => {
-      console.error("Error adding document: ", error);
-      return error;
     });
+  }
 }
-
-function ChatRoom() {
-  const [formValue, setFormValue] = useState([[""], [""], [""]]);
-  const messagesRef = firestore.collection("messages");
-  const gamesRef = firestore.collection("games");
-  const query: any = messagesRef;
-  // @ts-ignore
-  const [fetchedSongs, loading] = useCollectionData<any>(query, {
-    idField: "id",
-  } as any);
-
-  const addSong = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      formValue[2][0].split(" ").length < 5 ||
-      formValue[2][0].split(" ").length > 6
-    )
-      alert("Please write between 5 and 6 words");
-    else {
-      await messagesRef.add({
-        artist: formValue[0][0],
-        name: formValue[1][0],
-        lyrics: formValue[2][0],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
-      setFormValue([[""], [""], [""]]);
-    }
-  };
-  return (
-    <>
-      <Typography style={{ color: "black", alignItems: "center" }}>
-        {" "}
-        Beat for beat
-      </Typography>
-
-      <Content className="site-layout" style={{ padding: "0 5%" }}>
-        <form onSubmit={addSong}>
-          <label>Artist:</label>
-          <Input
-            type="text"
-            value={formValue[0]}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormValue([[e.target.value], formValue[1], formValue[2]])
-            }
-          />
-          <label>Title:</label>
-          <Input
-            required
-            type="text"
-            value={formValue[1]}
-            onChange={(e) =>
-              setFormValue([formValue[0], [e.target.value], formValue[2]])
-            }
-          />
-          <label>lyrics (Write between 5 or 6 words)</label>
-          <Input
-            required
-            type="text"
-            value={formValue[2]}
-            onChange={(e) =>
-              setFormValue([formValue[0], formValue[1], [e.target.value]])
-            }
-          />
-          <Button type="default" htmlType="submit">
-            Send
-          </Button>
-        </form>
-        <div>
-          <h1>Choose songs</h1>
-          {loading && <Spin size="large" />}
-          {fetchedSongs && (
-            <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
-          )}
-        </div>
-      </Content>
-    </>
-  );
-}
-
 export default App;
