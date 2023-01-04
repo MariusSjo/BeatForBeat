@@ -20,20 +20,29 @@ function ControlGame(props: any) {
   return (
     <div>
       {game.songs.length === game.songnumber + 1 && (
-        <Button type="primary" size="large" onClick={() => newGame()}>
+        <Button
+          className="nextSong"
+          type="primary"
+          size="large"
+          onClick={() => newGame()}
+        >
           {" "}
           New game{" "}
         </Button>
       )}
-      <Title>Game controller</Title>
+      <Title className="nextSong">Game controller</Title>
       <div className="revealButtons">{songlength && buttons}</div>
-      <Title>Current song:</Title>
-      <p> Artist: {game.songs[game.songnumber].artist} </p>
-      <p> Title: {game.songs[game.songnumber].name} </p>
-      <p> Hidden lyrics: {game.songs[game.songnumber].lyrics} </p>
+      <div className="solution">
+        <Title level={2}>Current song:</Title>
+        {game.songs[game.songnumber] && (
+          <p> 🕺 Artist: {game.songs[game.songnumber].artist} </p>
+        )}
+        <p> 🚀 Title: {game.songs[game.songnumber].name} </p>
+        <p> 🕵️ Hidden: {game.songs[game.songnumber].lyrics} </p>
+      </div>
       <div className="pointsection">
         <div>
-          <title>Team 1</title> <br></br>
+          <Title level={2}>Team-Nagell</Title> <br></br>
           <Button
             type="primary"
             size="large"
@@ -53,7 +62,7 @@ function ControlGame(props: any) {
           </Button>
         </div>
         <div>
-          <title>Team 2</title> <br></br>
+          <Title level={2}>Team-Giske</Title> <br></br>
           <Button
             type="primary"
             size="large"
@@ -73,9 +82,13 @@ function ControlGame(props: any) {
           </Button>
         </div>
       </div>
-
       {!(game.songs.length === game.songnumber + 1) && (
-        <Button type="primary" size="large" onClick={() => nextSong()}>
+        <Button
+          className="nextSong"
+          type="primary"
+          size="large"
+          onClick={() => nextSong()}
+        >
           {" "}
           Next song{" "}
         </Button>
