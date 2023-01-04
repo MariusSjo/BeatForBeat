@@ -1,12 +1,14 @@
 .App {
-  background-color: lightskyblue;
-  min-height: 100vh;
 }
 
 .centercontent {
   margin: auto;
-  width: 40%;
-  padding-top: 5%;
+  padding-left: 30%;
+  padding-right: 30%;
+  min-height: 100vh;
+  background-color: lightblue;
+  overflow: hidden;
+  text-align: center;
 }
 
 .centercontent > img {
@@ -16,7 +18,8 @@
   padding-top: 5%;
 }
 
-.centercontent > .ant-qrcode {
+.qr {
   margin-top: 5vh;
-  margin: auto;
+  margin-right: auto;
+  margin-left: auto;
 }
