@@ -7,20 +7,12 @@ let currentcolors = [0, 0, 1, 1, 0, 0];
 function QuizLayout(props: any) {
   const [currentSong, setCurrentSong] = useState(0);
   const [currentClick, setCurrentClick] = useState(null);
-  const [words, setWords] = useState(
-    props.game.songs.map((element: any) => {
-      return element.lyrics.split(" ")[props.game.songnumber];
-    })
-  );
-  if (props.game === undefined) {
-    return <div>loading</div>;
-  }
   const game = props.game[0];
   const songnumber = game.songnumber;
   const songs = game.songs.map((element: any) => {
     return element.lyrics.split(" ");
   });
-  //@ts-ignore @eslint-disable-next-line
+  const [words, setWords] = useState(songs[game.songnumber]);
 
   const audio = new Audio(sound);
 

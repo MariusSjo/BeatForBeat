@@ -4,7 +4,7 @@ import React from "react";
 import "./ControlGame.css";
 
 function ControlGame(props: any) {
-  const setValues = props.save.doc(sessionStorage.getItem("gameID"));
+  const setValues = props.save.doc(localStorage.getItem("gameID"));
   const game = props.game[0];
   const songlength = game.songs[game.songnumber].lyrics.split(" ").length;
   const buttons = [];
@@ -34,7 +34,7 @@ function ControlGame(props: any) {
       <div className="revealButtons">{songlength && buttons}</div>
       <div className="solution">
         <Title level={2}>Current song:</Title>
-        {game.songs[game.songnumber] && (
+        {game.songs[game.songnumber].artist && (
           <p> 🕺 Artist: {game.songs[game.songnumber].artist} </p>
         )}
         <p> 🚀 Title: {game.songs[game.songnumber].name} </p>
@@ -42,7 +42,7 @@ function ControlGame(props: any) {
       </div>
       <div className="pointsection">
         <div>
-          <Title level={2}>Team-Nagell</Title> <br></br>
+          <Title level={2}>Team-Gisle</Title> <br></br>
           <Button
             type="primary"
             size="large"
@@ -62,7 +62,7 @@ function ControlGame(props: any) {
           </Button>
         </div>
         <div>
-          <Title level={2}>Team-Giske</Title> <br></br>
+          <Title level={2}>Team-Nagell</Title> <br></br>
           <Button
             type="primary"
             size="large"

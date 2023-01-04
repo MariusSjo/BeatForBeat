@@ -89,7 +89,7 @@ function changeObject(songs: [RecordType]): RecordType[] {
   for (let i = 0; i < songs.length; i++) {
     const newSongFormat: RecordType = {
       name: songs[i].name,
-      /* artist: songs[i].artist, */
+      artist: songs[i].artist,
       lyrics: songs[i].lyrics,
       key: i + "",
     };
@@ -114,10 +114,10 @@ function SongSelection(songs: any) {
       alert("Please select at least one song");
       return;
     }
-    save.doc(sessionStorage.getItem("gameID")).update({
+    save.doc(localStorage.getItem("gameID")).update({
       songs: filteredSongs,
     });
-    save.doc(sessionStorage.getItem("gameID")).update({
+    save.doc(localStorage.getItem("gameID")).update({
       gameStarted: true,
     });
   }

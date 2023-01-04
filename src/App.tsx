@@ -26,7 +26,7 @@ const url = new URL(window.location.href);
 let currentGameQuery: any;
 
 function App() {
-  const [gameID, setGameID] = useState(sessionStorage.getItem("gameID"));
+  const [gameID, setGameID] = useState(localStorage.getItem("gameID"));
   const isDesktop = checkDevice();
   const gamesRef = firestore.collection("games");
   if (gameID !== null) {
@@ -40,7 +40,7 @@ function App() {
   if (!loadingGame) {
     if (game?.length === 0) {
       console.error("should be redrieted home");
-      sessionStorage.removeItem("gameID");
+      localStorage.removeItem("gameID");
       document.location.href = "/";
     } else {
       if (game !== undefined) {
@@ -54,7 +54,7 @@ function App() {
     const id = await getGameID();
     //@ts-ignore
     setGameID(id);
-    sessionStorage.setItem("gameID", id!);
+    localStorage.setItem("gameID", id!);
   }
 
   useEffect(() => {
@@ -83,13 +83,13 @@ function App() {
 
   async function getGameID(): Promise<string | null> {
     if (isDesktop) {
-      const gameIDSessionstorage = sessionStorage.getItem("gameID");
-      if (gameIDSessionstorage === null) {
+      const gameIDlocalStorage = localStorage.getItem("gameID");
+      if (gameIDlocalStorage === null) {
         return await createGameID();
       }
-      return gameIDSessionstorage;
+      return gameIDlocalStorage;
     } else {
-      sessionStorage.setItem("gameID", url.pathname.substring(1));
+      localStorage.setItem("gameID", url.pathname.substring(1));
       return url.pathname.substring(1);
     }
   }
@@ -97,7 +97,7 @@ function App() {
   async function createGameID() {
     const document = await createNewGame();
     setGameID(document.id);
-    sessionStorage.setItem("gameID", gameID!);
+    localStorage.setItem("gameID", gameID!);
     return document.id;
   }
 
