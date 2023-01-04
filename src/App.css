@@ -15,7 +15,7 @@
   padding-top: 5%;
 }
 
-.centercontent > {
-  padding-top: 5%;
+.centercontent > .ant-qrcode {
+  margin-top: 5vh;
   margin: auto;
 }
