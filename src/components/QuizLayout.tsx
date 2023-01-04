@@ -28,7 +28,10 @@ function QuizLayout(props: any) {
     if (box !== null) {
       if (currentcolors[id]) {
         box.style.backgroundColor = "red";
-        audio.play();
+        //@ts-ignore
+        if (!window.chrome) {
+          audio.play();
+        }
       } else {
         box.style.backgroundColor = "blue";
       }
@@ -80,6 +83,7 @@ function QuizLayout(props: any) {
   );
 
   function shuffleColors() {
+    console.log(songs[game.songnumber].length);
     if (songs[game.songnumber].length === 5) {
       currentcolors = [0, 0, 1, 1, 0].sort(() => Math.random() - 0.5);
     } else {
