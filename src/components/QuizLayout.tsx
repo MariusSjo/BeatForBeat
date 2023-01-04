@@ -7,6 +7,7 @@ let currentcolors = [0, 0, 1, 1, 0, 0];
 function QuizLayout(props: any) {
   const [currentSong, setCurrentSong] = useState(0);
   const [currentClick, setCurrentClick] = useState(null);
+  const [words, setWords] = useState(["1", "2", "3", "4", "5", "6"]);
   if (props.game === undefined) {
     return <div>loading</div>;
   }
@@ -15,7 +16,7 @@ function QuizLayout(props: any) {
   const songs = game.songs.map((element: any) => {
     return element.lyrics.split(" ");
   });
-  const [words, setWords] = useState(songs[game.songnumber]);
+  setWords(songs[game.songnumber]);
   const audio = new Audio(sound);
 
   if (currentClick !== game.revealClick) {
@@ -29,9 +30,7 @@ function QuizLayout(props: any) {
       if (currentcolors[id]) {
         box.style.backgroundColor = "red";
         //@ts-ignore
-        if (!window.chrome) {
-          audio.play();
-        }
+        audio.play();
       } else {
         box.style.backgroundColor = "blue";
       }
