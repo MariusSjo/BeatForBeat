@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Teamcomponent from "./Team";
 import "./QuizLayout.css";
 import sound from "../assets/sound/wrong.mp3";
+let currentcolors = [0, 0, 1, 1, 0, 0];
 
 function QuizLayout(props: any) {
   const [currentSong, setCurrentSong] = useState(0);
@@ -15,23 +16,11 @@ function QuizLayout(props: any) {
     return element.lyrics.split(" ");
   });
   const [words, setWords] = useState(songs[game.songnumber]);
-  const teams = ["nagell", "gisle"];
   const audio = new Audio(sound);
-  let currentcolors = [0, 0, 1, 1, 0, 1];
+
   if (currentClick !== game.revealClick) {
     setCurrentClick(game.revealClick);
     handleClick(game.revealClick);
-  }
-
-  function shuffle(array: Array<number>) {
-    let length = array.length,
-      ri;
-    while (length !== 0) {
-      ri = Math.floor(Math.random() * length);
-      length--;
-      [array[length], array[ri]] = [array[ri], array[length]];
-    }
-    return array;
   }
 
   function handleClick(id: number) {
@@ -54,7 +43,7 @@ function QuizLayout(props: any) {
 
   if (currentSong !== songnumber) {
     next();
-    currentcolors = shuffle(currentcolors);
+    shuffleColors();
   }
 
   return (
@@ -89,6 +78,18 @@ function QuizLayout(props: any) {
       </div>
     </>
   );
+
+  function shuffleColors() {
+    if (songs[game.songnumber].length === 5) {
+      currentcolors = [0, 0, 1, 1, 0].sort(() => Math.random() - 0.5);
+    } else {
+      if (Math.random() > 0.5) {
+        currentcolors = [1, 0, 0, 1, 0, 1].sort(() => Math.random() - 0.5);
+      } else {
+        currentcolors = [0, 0, 1, 1, 0, 0].sort(() => Math.random() - 0.5);
+      }
+    }
+  }
 }
 
 export default QuizLayout;
