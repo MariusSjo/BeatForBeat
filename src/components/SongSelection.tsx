@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { Button, Table, Tag, Transfer } from "antd";
+import { Button, Table, Transfer } from "antd";
 import type { ColumnsType, TableRowSelection } from "antd/es/table/interface";
 import type { TransferItem, TransferProps } from "antd/es/transfer";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
+import { Select } from "antd";
+import type { SelectProps } from "antd";
 
 interface RecordType {
+  value: string;
+  label: string;
   key: string;
   name: string;
   lyrics: string;
@@ -61,33 +65,18 @@ const TableTransfer = ({
   </Transfer>
 );
 
-const leftTableColumns: ColumnsType<RecordType> = [
-  {
-    dataIndex: "name",
-    title: "Song title",
-  },
-  /*   {
-    dataIndex: "artist",
-    title: "Artist",
-    render: (Artist) => <Tag>{Artist}</Tag>,
-  }, */
-  {
-    dataIndex: "lyrics",
-    title: "Lyrics",
-  },
-];
-
 const rightTableColumns: ColumnsType<Pick<RecordType, "name">> = [
   {
     dataIndex: "name",
-    title: "Song title",
   },
 ];
 
-function changeObject(songs: [RecordType]): RecordType[] {
+function changeObject(songs: [RecordType]): any[] {
   const tempArray: RecordType[] = [];
   for (let i = 0; i < songs.length; i++) {
     const newSongFormat: RecordType = {
+      value: i + "",
+      label: songs[i].artist + " - " + songs[i].name,
       name: songs[i].name,
       artist: songs[i].artist,
       lyrics: songs[i].lyrics,
@@ -101,16 +90,18 @@ function changeObject(songs: [RecordType]): RecordType[] {
 function SongSelection(songs: any) {
   const save = songs.saveToFirebase;
   const displaySongs = changeObject(songs.song);
+
   const [selectedSongs, setSelectedSongs] = useState<string[]>();
   const onChange = (nextSelectedSongs: string[]) => {
+    console.log("onChange", nextSelectedSongs);
     setSelectedSongs(nextSelectedSongs);
   };
 
   function saveSongs(): void {
     const filteredSongs = displaySongs.filter((song: any) =>
-      selectedSongs?.includes(song.key)
+      selectedSongs?.includes(song.value)
     );
-    if (filteredSongs.length < 1) {
+    if (filteredSongs && filteredSongs.length < 1) {
       alert("Please select at least one song");
       return;
     }
@@ -122,20 +113,28 @@ function SongSelection(songs: any) {
     });
   }
 
+  const options: SelectProps["options"] = [];
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
   return (
     <>
-      {
-        <TableTransfer
-          style={{ left: "-5%" }}
-          titles={["Available songs to pick", "Selected Songs"]}
-          dataSource={displaySongs}
-          targetKeys={selectedSongs}
-          disabled={false}
-          onChange={onChange}
-          leftColumns={leftTableColumns}
-          rightColumns={rightTableColumns}
-        />
-      }
+      <Select
+        mode="tags"
+        style={{ width: "100%" }}
+        optionFilterProp="children"
+        placeholder="Tags Mode"
+        onChange={onChange}
+        options={displaySongs}
+        filterOption={(input, option) => (option?.label ?? "").includes(input)}
+        filterSort={(optionA, optionB) =>
+          (optionA?.label ?? "")
+            .toLowerCase()
+            .localeCompare((optionB?.label ?? "").toLowerCase())
+        }
+      />
       <div style={{ paddingTop: "5%" }}>
         <Button type="primary" onClick={() => saveSongs()}>
           {" "}

@@ -9,6 +9,7 @@ import ControlGame from "./components/ControlGame";
 import GameConfiguration from "./components/GameConfiguration";
 import { query } from "firebase/firestore";
 import DesktopView from "./components/DesktopView";
+import { DocumentReference } from "firebase/firestore";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -52,7 +53,6 @@ function App() {
 
   async function CheckForActiveGame() {
     const id = await getGameID();
-    //@ts-ignore
     setGameID(id);
     localStorage.setItem("gameID", id!);
   }
@@ -101,7 +101,7 @@ function App() {
     return document.id;
   }
 
-  async function createNewGame(): Promise<any> {
+  async function createNewGame(): Promise<firebase.firestore.DocumentData> {
     return await gamesRef.add({
       songnumber: 0,
       revealClick: null,

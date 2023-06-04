@@ -39,12 +39,19 @@ function GameConfiguration(props: GameConfigurationProps) {
   };
   return (
     <>
-      <Typography style={{ color: "black", alignItems: "center" }}>
+      <h1 style={{ color: "black", alignItems: "center" }}>
         {" "}
-        Beat for beat
-      </Typography>
-
+        Beat for beat - Setup 🎶
+      </h1>
       <Content className="site-layout" style={{ padding: "0 5%" }}>
+        <div>
+          <h2>Choose songs</h2>
+          {loading && <Spin size="large" />}
+          {fetchedSongs && (
+            <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
+          )}
+        </div>
+        <h2>Do you wish to add some new songs to the database?</h2>
         <form onSubmit={addSong}>
           <label>Artist:</label>
           <Input
@@ -73,16 +80,9 @@ function GameConfiguration(props: GameConfigurationProps) {
             }
           />
           <Button type="default" htmlType="submit">
-            Send
+            Add song to database
           </Button>
         </form>
-        <div>
-          <h1>Choose songs</h1>
-          {loading && <Spin size="large" />}
-          {fetchedSongs && (
-            <SongSelection song={fetchedSongs} saveToFirebase={gamesRef} />
-          )}
-        </div>
       </Content>
     </>
   );
