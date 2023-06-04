@@ -121,27 +121,20 @@ function SongSelection(songs: any) {
 
   return (
     <>
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1"
-      >
-        <Select
-          mode="multiple"
-          style={{ width: "100%" }}
-          optionFilterProp="children"
-          placeholder="Tags Mode"
-          onChange={onChange}
-          options={displaySongs}
-          filterOption={(input, option) =>
-            (option?.label ?? "").includes(input)
-          }
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? "")
-              .toLowerCase()
-              .localeCompare((optionB?.label ?? "").toLowerCase())
-          }
-        />
-      </meta>
+      <Select
+        mode="multiple"
+        style={{ width: "100%" }}
+        optionFilterProp="children"
+        placeholder="Tags Mode"
+        onChange={onChange}
+        options={displaySongs}
+        filterOption={(input, option) => (option?.label ?? "").includes(input)}
+        filterSort={(optionA, optionB) =>
+          (optionA?.label ?? "")
+            .toLowerCase()
+            .localeCompare((optionB?.label ?? "").toLowerCase())
+        }
+      />
       <div style={{ paddingTop: "5%" }}>
         <Button type="primary" onClick={() => saveSongs()}>
           {" "}
