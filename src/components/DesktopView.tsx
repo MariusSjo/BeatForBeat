@@ -24,7 +24,7 @@ export default function DesktopView(props: any) {
   return (
     <>
       <div className="centercontent">
-        <Carousel autoplay autoplaySpeed={10000} style={carousel}>
+        <Carousel autoplay autoplaySpeed={50000} style={carousel}>
           <div>
             <Title>🎶 Beat for beat 🎶</Title>
             <img
