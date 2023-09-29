@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import SongSelection from "./SongSelection";
 import { Content } from "antd/es/layout/layout";
 import Spin from "antd/es/spin";
-import Typography from "antd/es/typography";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 interface GameConfigurationProps {
