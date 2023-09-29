@@ -34,7 +34,7 @@ export default function DesktopView(props: any) {
             ></img>
           </div>
           <div>
-            <Title level={4}>Regler:</Title>
+            <Title level={2}>Regler:</Title>
             <div style={carouselText}>
               <p>
                 <b>Du får poeng ved å:</b>

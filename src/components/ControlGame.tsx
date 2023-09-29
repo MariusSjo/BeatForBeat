@@ -1,7 +1,8 @@
-import { Button } from "antd";
+import { Button, FloatButton } from "antd";
 import Title from "antd/es/typography/Title";
 import React from "react";
 import "./ControlGame.css";
+import { FileTextOutlined } from "@ant-design/icons";
 
 function ControlGame(props: any) {
   const setValues = props.save.doc(localStorage.getItem("gameID"));
@@ -93,6 +94,17 @@ function ControlGame(props: any) {
           Next song{" "}
         </Button>
       )}
+      <FloatButton
+        icon={<FileTextOutlined rev={undefined} />}
+        description="Regler"
+        shape="square"
+        onClick={() => {
+          alert(
+            "Regler!☀️\n🎶 Beat for beat 🎶Ivar dyrhaug \n \n Du er host/Ivar Dyrhaug! \n\n Del deltagerene inn i to like store lag \n\n  Lagene får poeng ved å: \n 1.Klare å synge en sang som innholder ordet. (Ett poeng) \n 2.Klare å synge den skjulte sangteksten. 🎙️ (Like mange poeng som ruter du avslører) \n \nLagene velger rute annenhver gang Hvis du velger en rute som er rød får man ikke mulighet til å ta poeng og runden går over til det andre teamet. \n\n Husk at du kan gi minuspoeng også!"
+          );
+        }}
+        style={{ right: 24 }}
+      />
     </div>
   );
 

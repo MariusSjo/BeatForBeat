@@ -6,6 +6,7 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { Select } from "antd";
 import type { SelectProps } from "antd";
+import Title from "antd/es/skeleton/Title";
 
 interface RecordType {
   value: string;
@@ -115,10 +116,6 @@ function SongSelection(songs: any) {
 
   const options: SelectProps["options"] = [];
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
   return (
     <>
       <Select
@@ -128,17 +125,20 @@ function SongSelection(songs: any) {
         placeholder="Tags Mode"
         onChange={onChange}
         options={displaySongs}
-        filterOption={(input, option) => (option?.label ?? "").includes(input)}
+        filterOption={(input, option) =>
+          (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())
+        }
         filterSort={(optionA, optionB) =>
           (optionA?.label ?? "")
             .toLowerCase()
             .localeCompare((optionB?.label ?? "").toLowerCase())
         }
       />
-      <div style={{ paddingTop: "5%" }}>
+      <div style={{ paddingTop: "12rem" }}>
+        <h2>Steg 2: </h2>
         <Button type="primary" onClick={() => saveSongs()}>
           {" "}
-          Save song selection and start game
+          Start spillet! 🚀
         </Button>
       </div>
     </>
